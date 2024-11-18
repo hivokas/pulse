@@ -9,14 +9,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-<div id="button" role="button" class="fixed inset-0 group flex flex-col justify-center items-center p-10 select-none">
-    <div class="size-48 p-4 group-active:scale-90 transition">
-        <svg class="text-red-500 size-full" fill="currentColor" width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<div id="button" role="button" class="fixed inset-0 group flex flex-col justify-center items-center p-10 select-none touch-manipulation">
+    <div class="size-48 p-4 group-active:scale-90 transition-all">
+        <svg class="text-red-500 size-full" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 20a1 1 0 0 1-.437-.1C11.214 19.73 3 15.671 3 9a5 5 0 0 1 8.535-3.536l.465.465.465-.465A5 5 0 0 1 21 9c0 6.646-8.212 10.728-8.562 10.9A1 1 0 0 1 12 20z"/>
         </svg>
     </div>
 
-    <div id="pulse" class="font-semibold text-3xl text-center min-h-24">Start tapping the heart</div>
+    <div id="pulse" class="font-semibold text-3xl text-center min-h-24"></div>
 </div>
 
 <script>
@@ -24,14 +24,33 @@
     let lastDiffsMs = [];
     const buttonEl = document.getElementById('button');
     const pulseEl = document.getElementById('pulse');
+    let timeoutId;
 
-    buttonEl.addEventListener('click', function () {
-        const currentTap = new Date();
+    updatePulse();
 
+    buttonEl.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        updatePulse();
+
+        lastTap = new Date();
+
+        const lastTapForCurrentClick = lastTap;
+
+        timeoutId = setTimeout(() => {
+            if (lastTapForCurrentClick === lastTap) {
+                lastTap = null;
+                lastDiffsMs = [];
+                updatePulse();
+            }
+        }, 3000);
+    });
+
+    function updatePulse() {
         if (lastTap) {
             lastDiffsMs = [
                 ...lastDiffsMs,
-                currentTap - lastTap,
+                new Date() - lastTap,
             ].slice(-3);
 
             const avgDiffMs = lastDiffsMs.reduce((a, b) => a + b, 0) / lastDiffsMs.length;
@@ -39,10 +58,10 @@
             const pulse = Math.ceil(60 / (avgDiffMs / 1000));
 
             pulseEl.innerText = pulse.toString();
+        } else {
+            pulseEl.innerText = 'Start tapping the heart';
         }
-
-        lastTap = new Date();
-    });
+    }
 </script>
 </body>
 </html>
