@@ -6,11 +6,11 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Pulse</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.15"></script>
 </head>
 <body>
-<div id="button" role="button" class="fixed inset-0 group flex flex-col justify-center items-center p-10 select-none touch-manipulation">
-    <div class="size-48 p-4 group-active:scale-90 transition-all">
+<div id="button" role="button" class="fixed inset-0 flex flex-col justify-center items-center p-10 select-none touch-manipulation">
+    <div id="heart" class="size-48 p-4 transition duration-150">
         <svg class="text-red-500 size-full" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 20a1 1 0 0 1-.437-.1C11.214 19.73 3 15.671 3 9a5 5 0 0 1 8.535-3.536l.465.465.465-.465A5 5 0 0 1 21 9c0 6.646-8.212 10.728-8.562 10.9A1 1 0 0 1 12 20z"/>
         </svg>
@@ -23,6 +23,7 @@
     let lastTap;
     let lastDiffsMs = [];
     const buttonEl = document.getElementById('button');
+    const heartEl = document.getElementById('heart');
     const pulseEl = document.getElementById('pulse');
     let timeoutId;
 
@@ -30,6 +31,12 @@
 
     buttonEl.addEventListener('click', function (event) {
         event.preventDefault();
+
+        heartEl.classList.add('scale-110');
+
+        setTimeout(() => {
+            heartEl.classList.remove('scale-110');
+        }, 150);
 
         updatePulse();
 
