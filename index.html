@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Pulse</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div class="flex flex-col justify-center items-center min-h-screen p-10">
+    <button id="heart" type="button" class="size-48 p-4 active:scale-90 transition">
+        <svg class="text-red-500 size-full" fill="currentColor" width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 20a1 1 0 0 1-.437-.1C11.214 19.73 3 15.671 3 9a5 5 0 0 1 8.535-3.536l.465.465.465-.465A5 5 0 0 1 21 9c0 6.646-8.212 10.728-8.562 10.9A1 1 0 0 1 12 20z"/>
+        </svg>
+    </button>
+
+    <div id="pulse" class="font-semibold text-3xl text-center min-h-24">Start tapping the heart</div>
+</div>
+
+<script>
+    let lastTap;
+    let lastDiffsMs = [];
+
+    document.getElementById('heart').addEventListener('click', function () {
+        const currentTap = new Date();
+
+        if (lastTap) {
+            lastDiffsMs = [
+                ...lastDiffsMs,
+                currentTap - lastTap,
+            ].slice(-3);
+
+            const avgDiffMs = lastDiffsMs.reduce((a, b) => a + b, 0) / lastDiffsMs.length;
+
+            const pulse = Math.ceil(60 / (avgDiffMs / 1000));
+
+            document.getElementById('pulse').innerText = pulse.toString();
+        }
+
+        lastTap = new Date();
+    });
+</script>
+</body>
+</html>
